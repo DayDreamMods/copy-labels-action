@@ -90,7 +90,7 @@ jobs:
           overwrite: true
 
       - name: Copy Labels
-        uses: RedEyeMods/copy-rulesets-action@2024.6.2
+        uses: RedEyeMods/copy-labels-action@2024.6.2
         with:
           token: ${{ secrets.ORG_PAT }}
           source-repo: ${{ env.SOURCE_REPO }}

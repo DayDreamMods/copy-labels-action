@@ -40,6 +40,6 @@ const github = require('@actions/github');
             color: label.color,
             description: label.description
         });
-        core.info(`Created label ${newName} @ ${destRepo}`)
+        core.info(`Created label ${newName} w/ description '${label.description}' @ ${destRepo}`)
     }
 })();

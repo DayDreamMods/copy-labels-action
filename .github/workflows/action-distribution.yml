@@ -8,6 +8,7 @@ on:
 jobs:
   check-diff:
     runs-on: ubuntu-latest
+    if: ${{ !github.event.repository.is_template }}
     outputs:
       INDEX_CHANGED: ${{ steps.filter.outputs.index }}
     steps:
@@ -52,4 +53,4 @@ jobs:
           git tag ${{ steps.version.outputs.version }}
           git push -f --set-upstream origin ${{ env.checkout_branch }}
           git push origin tag ${{ steps.version.outputs.version }}
-          echo '🚀 Released v${{ steps.version.outputs.version }} @ ${{ env.checkout_branch }}' >> $GITHUB_STEP_SUMMARY
+          echo '🚀 Released v${{ steps.version.outputs.version }} @ ${{ github.event.repository.full_name }}/${{ env.checkout_branch }}' >> $GITHUB_STEP_SUMMARY

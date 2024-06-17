@@ -5,6 +5,21 @@ inputs:
     description: 'The token to use.'
     require: false
     default: ${{ github.token }}
+  source-repo:
+    description: 'The repository to obtain the labels from; Ensure the provided secret is able to access this.'
+    required: true
+  dest-repo:
+    description: 'The repository to copy the labels onto. Defaults to the current repository; Ensure the provided secret is able to access this.'
+    required: false
+    default: ''
+  regex-filter:
+    descripton: 'The RegEx to check against the rulesets name.'
+    required: false
+    default: '.*'
+  name-format:
+    description: 'The format of the new name with an optional ${name} insertion.'
+    required: false
+    default: '${name}'
 runs:
   using: 'node20'
   main: 'index.js'

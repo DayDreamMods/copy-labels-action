@@ -70,12 +70,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CUR_REPO: ${{ github.repository }}
+      SOURCE_REPO: ${{ fromJson(needs.get-template-repo.outputs.template_repository).full_name }}
     steps:
       - name: Copy On Rulesets
         uses: RedEyeMods/copy-rulesets-action@2024.6.8
         with:
           owner-token: ${{ secrets.ORG_PAT }}
-          source-repo: ${{ fromJson(needs.get-template-repo.outputs.template_repository).full_name }}
+          source-repo: ${{ env.SOURCE_REPO }}
           regex-filter: '✓+.*'
           ruleset-enabled: true
           overwrite: true
@@ -83,49 +84,17 @@ jobs:
         uses: RedEyeMods/copy-rulesets-action@2024.6.8
         with:
           owner-token: ${{ secrets.ORG_PAT }}
-          source-repo: ${{ fromJson(needs.get-template-repo.outputs.template_repository).full_name }}
+          source-repo: ${{ env.SOURCE_REPO }}
           regex-filter: '✗+.*'
           ruleset-enabled: false
           overwrite: true
-          
+
       - name: Copy Labels
-        uses: actions/github-script@v7
+        uses: RedEyeMods/copy-rulesets-action@2024.6.2
         with:
-          github-token: ${{ secrets.ORG_PAT }}
-          script: |
-            async function main() {
-              const [currentOwner, currentRepo] = process.env.CUR_REPO.split('/');
-              const [targetOwner, targetRepo] = process.env.TARGET_REPO.split('/');
-  
-              const copyLabels = await github.rest.issues.listLabelsForRepo({
-                owner: targetOwner, repo: targetRepo
-              });
-              const currentLabels = await github.rest.issues.listLabelsForRepo({
-                owner: currentOwner, repo: currentRepo
-              });
-  
-              for (const label of copyLabels.data) {
-                const curLabelIdx = currentLabels.data.findIndex(lbl => lbl.name == label.name);
-                if (curLabelIdx >= 0) {
-                  await github.rest.issues.deleteLabel({
-                    owner: currentOwner, repo: currentRepo, name: currentLabels.data[curLabelIdx].name
-                  });
-                } 
-  
-                await github.rest.issues.createLabel({
-                  owner: currentOwner, repo: currentRepo, 
-                  name: label.name,
-                  color: label.color,
-                  description: label.description
-                });
-              }
-            }
-  
-            main().catch(error => {
-              console.error(error);
-              process.exit(1);
-            });
-            
+          token: ${{ secrets.ORG_PAT }}
+          source-repo: ${{ env.SOURCE_REPO }}
+          
       - name: Copy Misc Settings
         uses: actions/github-script@v7
         with:

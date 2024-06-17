@@ -52,3 +52,4 @@ jobs:
           git tag ${{ steps.version.outputs.version }}
           git push -f --set-upstream origin ${{ env.checkout_branch }}
           git push origin tag ${{ steps.version.outputs.version }}
+          echo '🚀 Released v${{ steps.version.outputs.version }} @ ${{ env.checkout_branch }}' >> $GITHUB_STEP_SUMMARY

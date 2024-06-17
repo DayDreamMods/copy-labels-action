@@ -8,12 +8,11 @@ on:
 jobs:
   check-diff:
     runs-on: ubuntu-latest
-    if: ${{ github.event.repository.is_template != 'true' }}
+    if: ${{ !github.event.repository.is_template }}
     outputs:
       INDEX_CHANGED: ${{ steps.filter.outputs.index }}
     steps:
       - uses: actions/checkout@v4
-      - run: echo '${{ github.event.repository.is_template }}'
       - uses: dorny/paths-filter@v3
         id: filter
         with:

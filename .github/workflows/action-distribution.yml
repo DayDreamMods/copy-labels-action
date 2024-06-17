@@ -8,6 +8,7 @@ on:
 jobs:
   check-diff:
     runs-on: ubuntu-latest
+    if: ${{ github.event.repository.is_template != 'true' }}
     outputs:
       INDEX_CHANGED: ${{ steps.filter.outputs.index }}
     steps:
